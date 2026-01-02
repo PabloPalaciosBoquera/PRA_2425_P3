@@ -29,6 +29,14 @@ public:
         return !(a == b);
     }
 
+    friend bool operator<(const TableEntry<V> &a, const TableEntry<V> &b) {     // Sobrecarga global <
+        return a.key < b.key;
+    }
+
+    friend bool operator>(const TableEntry<V> &a, const TableEntry<V> &b) {     // Sobrecarga global >
+        return a.key > b.key;
+    }
+
     friend std::ostream& operator<<(std::ostream &out,    // Sobrecarga global del operador << 
                                     const TableEntry<V> &e) {
         out << "('" << e.key << "' => " << e.value << ")";

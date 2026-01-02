@@ -8,7 +8,7 @@
 #include "Dict.h"
 #include "TableEntry.h"
 
-#include "../../PRA_2425_P1/ListLinked.h"
+#include "../PRA_2425_P1/ListLinked.h"
 
 template <typename V>
 class HashTable : public Dict<V> {
@@ -46,27 +46,30 @@ public:
 
 
 // Métodos
-
+// Constructor
 template <typename V>
 HashTable<V>::HashTable(int size)
-    : n(0), max(size)
+    : n(0), max(size)   // Inicializa n = 0 y max = size
 {
-    if (size <= 0)
+    if (size <= 0)   // Si size inválido, excepción
         throw std::runtime_error("Tamaño de tabla no válido");
 
-    table = new ListLinked<TableEntry<V>>[max];
-}
+    table = new ListLinked<TableEntry<V>>[max];   // Crea un array de max listas enlazadas vacías
+}   // Cada cubeta comienza vacía
 
+// Destructor
 template <typename V>
 HashTable<V>::~HashTable() {
     delete[] table;
 }
 
+// nº de cubetas
 template <typename V>
 int HashTable<V>::capacity() {
     return max;
 }
 
+// nº de elementos guardados
 template <typename V>
 int HashTable<V>::entries() {
     return n;
@@ -76,50 +79,50 @@ template <typename V>
 int HashTable<V>::h(std::string key) {
     int suma = 0;
     for (char c : key)
-        suma += static_cast<int>(c);
+        suma += static_cast<int>(c);   // Suma ASCII de los caracteres
 
-    return suma % max;
+    return suma % max;   // Max para caer en rango
 }
 
 template <typename V>
 void HashTable<V>::insert(std::string key, V value) {
-    int idx = h(key);
-    TableEntry<V> nuevo(key, value);
+    int idx = h(key);   // Calcula cubeta idx
+    TableEntry<V> nuevo(key, value);   // Crea entrada (key, value)
 
-    int pos = table[idx].search(nuevo); // -1 si no existe
+    int pos = table[idx].search(nuevo); // Busca si ya existe en esa cubeta
 
-    if (pos != -1)
-        throw std::runtime_error("insert: clave ya existente");
+    if (pos != -1)   
+        throw std::runtime_error("insert: clave ya existente");   // Si existe, excepción
 
-    table[idx].prepend(nuevo); // Inserta al principio
-    n++;
+    table[idx].prepend(nuevo); // Inserta al principio de la lista
+    n++;   // Incrementa contador global
 }
 
 template <typename V>
 V HashTable<V>::search(std::string key) {
-    int idx = h(key);
-    TableEntry<V> buscado(key);
+    int idx = h(key);   // Calcula cubeta
+    TableEntry<V> buscado(key);   // Crea TableEntry(key) "solo con clave"
 
-    int pos = table[idx].search(buscado);
+    int pos = table[idx].search(buscado);   // Busca en la lista
 
     if (pos == -1)
-        throw std::runtime_error("search: clave no encontrada");
+        throw std::runtime_error("search: clave no encontrada");   // Si no está, excepción
 
-    return table[idx].get(pos).value;
+    return table[idx].get(pos).value;   // Si está, devuelve el .value de esa entrada
 }
 
 template <typename V>
 V HashTable<V>::remove(std::string key) {
-    int idx = h(key);
+    int idx = h(key);   // Calcula cubeta
     TableEntry<V> buscado(key);
 
-    int pos = table[idx].search(buscado);
+    int pos = table[idx].search(buscado);   // Busca posición
     if (pos == -1)
-        throw std::runtime_error("remove: clave no encontrada");
+        throw std::runtime_error("remove: clave no encontrada");   // Si no existe, excepción
 
-    TableEntry<V> eliminado = table[idx].remove(pos);
-    n--;
-    return eliminado.value;
+    TableEntry<V> eliminado = table[idx].remove(pos);   // Borra la posición y recupera el TableEntry eliminado
+    n--;   // Decrementa n
+    return eliminado.value;   // Devuelve el valor eliminado
 }
 
 template <typename V>
