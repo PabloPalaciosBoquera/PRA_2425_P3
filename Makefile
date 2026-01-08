@@ -15,5 +15,4 @@ bin/testBSTreeDict: testBSTreeDict.cpp Dict.h BSTreeDict.h TableEntry.h BSTree.h
 	g++ -o bin/testBSTreeDict testBSTreeDict.cpp
 
 clean:
-	rm -rf *.o *.gch bin
-
+	rm -rf *.o *.gch testBSTree testBSTreeDict testHashTable testTableEntry
